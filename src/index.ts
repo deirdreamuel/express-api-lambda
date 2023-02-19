@@ -1,16 +1,17 @@
 import lambda from '@vendia/serverless-express';
 import express from 'express';
 
-import routes from '@/routes';
+import { PORT } from './config/server';
+import routes from './routes';
 
-const app = express();
+const server = express();
 
-app.use('/', routes);
+server.use('/', routes);
 
-if (process.env.AWS_LAMBDA_RUNTIME_API === undefined) {
-  app.listen(4000, () => {
-    console.log('Starting server on port 4000...');
+if (!process.env.AWS_LAMBDA_RUNTIME_API) {
+  server.listen(PORT, () => {
+    console.log(`Starting server on port ${PORT}...`);
   });
 }
 
-export const handler = lambda({ app });
+export const handler = lambda({ app: server });
